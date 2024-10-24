@@ -46,6 +46,12 @@ const columns: GridColDef<Transaction>[] = [
   { field: 'price_date', headerName: 'Price Date', flex: 2, minWidth: 170 },
 ];
 
+const convertExcelDateToJSDate = (excelSerialDate: number): string => {
+  const date = new Date((excelSerialDate - 25569) * 86400 * 1000); // Convert Excel serial date to JavaScript Date
+  const formattedDate = date.toISOString().split('T')[0]; // Format as YYYY-MM-DD
+  return formattedDate;
+};
+
 const TransactionHistoryTable: React.FC<TransactionHistoryTableProps> = ({ selectedCrop }) => {
   const [rows, setRows] = useState<Transaction[]>([]);
   const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 10 });
@@ -57,7 +63,8 @@ const TransactionHistoryTable: React.FC<TransactionHistoryTableProps> = ({ selec
         const cropFileMap: { [key: string]: string } = {
           Cumin: 'cumin_data.xlsx',
           Turmeric: 'turmeric_data.xlsx',
-          Chillies: 'turmeric_data.xlsx',
+          Chillies: 'chilli_data.xlsx',
+          Pepper: 'pepper_data.xlsx'
         };
 
         const fileName = cropFileMap[crop];
@@ -75,19 +82,28 @@ const TransactionHistoryTable: React.FC<TransactionHistoryTableProps> = ({ selec
         const jsonData: RawTransaction[] = XLSX.utils.sheet_to_json(worksheet);
 
         // Map Excel data to match DataGrid structure
-        const mappedData: Transaction[] = jsonData.map((row: RawTransaction, index: number) => ({
-          id: index + 1,
-          sl_no: row['Sl no.'],
-          district_name: row['District Name'],
-          market_name: row['Market Name'],
-          commodity: row['Commodity'],
-          variety: row['Variety'],
-          grade: row['Grade'],
-          min_price: row['Min Price (Rs./Quintal)'],
-          max_price: row['Max Price (Rs./Quintal)'],
-          modal_price: row['Modal Price (Rs./Quintal)'],
-          price_date: row['Price Date'],
-        }));
+        const mappedData: Transaction[] = jsonData.map((row: RawTransaction, index: number) => {
+          let priceDate = row['Price Date'];
+
+          // Check if the priceDate is a number (Excel serial date)
+          if (typeof priceDate === 'number') {
+            priceDate = convertExcelDateToJSDate(priceDate);
+          }
+
+          return {
+            id: index + 1,
+            sl_no: row['Sl no.'],
+            district_name: row['District Name'],
+            market_name: row['Market Name'],
+            commodity: row['Commodity'],
+            variety: row['Variety'],
+            grade: row['Grade'],
+            min_price: row['Min Price (Rs./Quintal)'],
+            max_price: row['Max Price (Rs./Quintal)'],
+            modal_price: row['Modal Price (Rs./Quintal)'],
+            price_date: priceDate, // Use formatted date
+          };
+        });
 
         setRows(mappedData);
       } catch (error) {

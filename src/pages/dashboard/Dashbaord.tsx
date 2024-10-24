@@ -18,7 +18,7 @@ const Dashbaord = () => {
       </Grid>
 
       <Grid item xs={12} md={8}>
-        <TotalSpent />
+        <Balance />
       </Grid>
 
       <Grid item xs={12} md={4}>
@@ -26,7 +26,7 @@ const Dashbaord = () => {
       </Grid>
 
       <Grid item xs={12} md={8}>
-        <Balance />
+        <TotalSpent />
       </Grid>
 
       <Grid item xs={12} md={4}>

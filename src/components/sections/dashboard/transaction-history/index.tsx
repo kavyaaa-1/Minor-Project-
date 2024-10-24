@@ -14,7 +14,7 @@ const TransactionHistory = () => {
   const [selectedCrop, setSelectedCrop] = useState('Turmeric'); // Set default crop to "Turmeric"
 
   // List of crop names to display in the dropdown
-  const cropOptions = ['Cumin', 'Turmeric', 'Chillies'];
+  const cropOptions = ['Cumin', 'Turmeric', 'Chillies', 'Pepper'];
 
   // Handle crop change with correct typing for SelectChangeEvent
   const handleCropChange = (e: SelectChangeEvent<string>) => {

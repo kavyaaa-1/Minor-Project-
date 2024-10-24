@@ -1,118 +1,151 @@
-import { useState } from 'react';
-import IconifyIcon from 'components/base/IconifyIcon';
+import { useState, useEffect } from 'react';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
-import Chip from '@mui/material/Chip';
-import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import FormControl from '@mui/material/FormControl';
 import MenuItem from '@mui/material/MenuItem';
-import customShadows from 'theme/shadows';
 import BalanceChart from './BalanceChart';
+import * as XLSX from 'xlsx';
 
-const balance = [
-  {
-    id: 1,
-    type: 'Saves',
-    value: '43.50%',
-    progress: '+2.45%',
-    isPositive: true,
-  },
-  {
-    id: 2,
-    type: 'Balance',
-    value: '$52,422',
-    progress: '-4.75%',
-    isPositive: false,
-  },
-];
+interface RawTransaction {
+  'Sl no.': number;
+  'District Name': string;
+  'Market Name': string;
+  'Commodity': string;
+  'Variety': string;
+  'Grade': string;
+  'Min Price (Rs./Quintal)': number;
+  'Max Price (Rs./Quintal)': number;
+  'Modal Price (Rs./Quintal)': number;
+  'Price Date': string | number; // Can be a date or an Excel serial number
+}
+
+// Available crops
+const cropOptions = ['Cumin', 'Turmeric', 'Chillies'];
+
+// Available years
+const yearOptions = [2010, 2011, 2012, 2013, 2014, 2015];
+
+const convertExcelDateToJSDate = (excelSerialDate: number): string => {
+  const date = new Date((excelSerialDate - 25569) * 86400 * 1000);
+  return date.toISOString().split('T')[0]; // Format as YYYY-MM-DD
+};
 
 const Balance = () => {
-  const [timeline, setTimeline] = useState('monthly');
-  const [open, setOpen] = useState(false);
+  const [selectedCrop, setSelectedCrop] = useState<string>('Turmeric');
+  const [selectedYear, setSelectedYear] = useState<number>(2014); // Default year is 2015
+  const [chartData, setChartData] = useState<{ min: number[]; max: number[] }>({ min: [], max: [] });
 
-  const handleSelectChange = (event: SelectChangeEvent) => {
-    setTimeline(event.target.value);
-    console.log(open);
+  // Function to fetch data from Excel
+  const fetchCropData = async (crop: string, year: number) => {
+    const cropFileMap: { [key: string]: string } = {
+      Cumin: 'cumin_data.xlsx',
+      Turmeric: 'turmeric_data.xlsx',
+      Chillies: 'chilli_data.xlsx',
+    };
+
+    const fileName = cropFileMap[crop];
+    if (!fileName) return;
+
+    try {
+      const response = await fetch(`venus/src/data/${fileName}`);
+      const arrayBuffer = await response.arrayBuffer();
+      const data = new Uint8Array(arrayBuffer);
+      const workbook = XLSX.read(data, { type: 'array' });
+      const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+      const jsonData: RawTransaction[] = XLSX.utils.sheet_to_json(worksheet);
+
+      const monthData: { [key: string]: { min: number[]; max: number[] } } = {};
+
+      jsonData.forEach((row) => {
+        let priceDate = row['Price Date'];
+        if (typeof priceDate === 'number') {
+          priceDate = convertExcelDateToJSDate(priceDate); // Convert Excel serial date to JS date
+        }
+        const rowYear = new Date(priceDate).getFullYear();
+        const rowMonth = new Date(priceDate).getMonth(); // 0 = January, 1 = February, etc.
+
+        // Filter by the selected year
+        if (rowYear === year) {
+          const minPrice = row['Min Price (Rs./Quintal)'];
+          const maxPrice = row['Max Price (Rs./Quintal)'];
+
+          // Group prices by month
+          if (!monthData[rowMonth]) {
+            monthData[rowMonth] = { min: [], max: [] }; // Initialize if month doesn't exist
+          }
+          monthData[rowMonth].min.push(minPrice); // Add min price for the month
+          monthData[rowMonth].max.push(maxPrice); // Add max price for the month
+        }
+      });
+
+      // Aggregate prices for each month
+      const aggregatedMin: number[] = [];
+      const aggregatedMax: number[] = [];
+
+      Object.keys(monthData).forEach((month) => {
+        const prices = monthData[month];
+        
+        const minPrice = prices.min.length ? Math.min(...prices.min) : 0;
+        const maxPrice = prices.max.length ? Math.max(...prices.max) : 0;
+
+        aggregatedMin.push(minPrice);
+        aggregatedMax.push(maxPrice);
+      });
+
+      // Update the state with the new datasets
+      setChartData({ min: aggregatedMin, max: aggregatedMax });
+    } catch (error) {
+      console.error('Error loading Excel file:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchCropData(selectedCrop, selectedYear);
+  }, [selectedCrop, selectedYear]);
+
+  const handleCropChange = (event: SelectChangeEvent) => {
+    setSelectedCrop(event.target.value);
+  };
+
+  const handleYearChange = (event: SelectChangeEvent) => {
+    setSelectedYear(Number(event.target.value));
   };
 
   return (
     <Paper sx={{ height: { xs: 500, sm: 355 } }}>
-      <Stack alignItems={{ xs: 'flex-start', sm: 'center' }} justifyContent="space-between">
-        <Stack
-          alignItems="center"
-          spacing={{ xs: 0.75, sm: 1.5 }}
-          direction={{ xs: 'column', sm: 'row' }}
-        >
-          <Typography variant="h4" color="text.primary">
-            Balance
-          </Typography>
-          <Stack mt={{ xs: 0, sm: 0.55 }} alignItems="center" spacing={0.5}>
-            <IconifyIcon icon="ic:round-check-circle" color="success.main" fontSize="h6.fontSize" />
-            <Typography variant="body1" color="success.main" fontWeight={700}>
-              On track
-            </Typography>
-          </Stack>
-        </Stack>
+      <Stack alignItems="center" justifyContent="space-between">
+        <Typography variant="h4" color="text.primary">
+          Crop Price Trend
+        </Typography>
 
-        <FormControl
-          variant="filled"
-          sx={{
-            width: 105,
-            '& .MuiInputBase-root': {
-              '&:focus-within': {
-                borderColor: 'transparent !important',
-                boxShadow: 'none',
-              },
-            },
-          }}
-        >
-          <Select
-            id="select-filled"
-            value={timeline}
-            onOpen={() => setOpen(true)}
-            onClose={() => setOpen(false)}
-            onChange={handleSelectChange}
-          >
-            <MenuItem value="weekly">Weekly</MenuItem>
-            <MenuItem value="monthly">Monthly</MenuItem>
-            <MenuItem value="yearly">Yearly</MenuItem>
+        {/* Crop Selection */}
+        <FormControl variant="filled" sx={{ width: 150 }}>
+          <Select id="crop-select" value={selectedCrop} onChange={handleCropChange}>
+            {cropOptions.map((crop) => (
+              <MenuItem key={crop} value={crop}>
+                {crop}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+
+        {/* Year Selection */}
+        <FormControl variant="filled" sx={{ width: 105 }}>
+          <Select id="year-select" value={selectedYear.toString()} onChange={handleYearChange}>
+            {yearOptions.map((year) => (
+              <MenuItem key={year} value={year}>
+                {year}
+              </MenuItem>
+            ))}
           </Select>
         </FormControl>
       </Stack>
 
-      <Stack
-        mt={3}
-        width={1}
-        spacing={3}
-        justifyContent="center"
-        alignItems="center"
-        direction={{ xs: 'column', sm: 'row' }}
-      >
-        {balance.map((item) => (
-          <Box
-            key={item.id}
-            px={2.5}
-            py={2}
-            width={1}
-            maxWidth={320}
-            borderRadius={1.75}
-            boxShadow={customShadows[0]}
-          >
-            <Typography variant="body2" color="text.disabled" fontWeight={500}>
-              {item.type}
-            </Typography>
-            <Stack mt={0.75} alignItems="center" spacing={1.75}>
-              <Typography variant="h3">{item.value}</Typography>
-              <Chip label={item.progress} color={item.isPositive ? 'success' : 'error'} />
-            </Stack>
-          </Box>
-        ))}
-      </Stack>
-
+      {/* Pass chart data to BalanceChart */}
       <BalanceChart
-        data={[20, 30, 50, 45, 60, 20, 40, 50, 30, 60, 40, 50, 20, 45, 30]}
+        data={chartData}
         sx={{ width: 1, height: '220px !important' }}
       />
     </Paper>

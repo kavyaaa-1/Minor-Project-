@@ -1,115 +1,114 @@
 import { useMemo } from 'react';
-import { SxProps, useTheme } from '@mui/material';
+import { SxProps} from '@mui/material';
 import * as echarts from 'echarts/core';
 import ReactEchart from 'components/base/ReactEchart';
-import { CanvasRenderer } from 'echarts/renderers';
 import { LineChart } from 'echarts/charts';
-
 import {
   TitleComponent,
   TooltipComponent,
   GridComponent,
   LegendComponent,
 } from 'echarts/components';
+import { CanvasRenderer } from 'echarts/renderers';
 
-echarts.use([
-  LineChart,
-  TitleComponent,
-  TooltipComponent,
-  GridComponent,
-  LegendComponent,
-  CanvasRenderer,
-]);
+echarts.use([LineChart, TitleComponent, TooltipComponent, GridComponent, LegendComponent, CanvasRenderer]);
 
-interface ClientChartProps {
-  data: number[];
+interface BalanceChartProps {
+  data: { min: number[]; max: number[] };
   sx?: SxProps;
 }
 
-const BalanceChart = ({ data, ...rest }: ClientChartProps) => {
-  const theme = useTheme();
+const BalanceChart = ({ data, ...rest }: BalanceChartProps) => {
+  const option = useMemo(() => {
+    // Ensure min and max arrays have the same length
+    const length = Math.max(data.min.length, data.max.length);
+    const minData = Array(length).fill(0);
+    const maxData = Array(length).fill(0);
 
-  const option = useMemo(
-    () => ({
+    // Populate minData and maxData
+    for (let i = 0; i < length; i++) {
+      minData[i] = data.min[i] || 0; // Default to 0 if undefined
+      maxData[i] = data.max[i] || 0; // Default to 0 if undefined
+    }
+
+    return {
       tooltip: {
         trigger: 'axis',
-        formatter: '{b}: ${c}',
+        formatter: (params: { name: string; data: number }[]) => {
+          return `
+            <div style="font-family: Arial, sans-serif; font-size: 14px; color: #333;">
+              <strong>${params[0].name}</strong><br />
+              <span>Max Price:</span> 
+              <span style="font-weight: bold;">₹${params[0].data.toFixed(2)}</span><br />
+              <span>Min Price:</span> 
+              <span style="font-weight: bold;">₹${params[1].data.toFixed(2)}</span><br />
+            </div>
+          `;
+        },
       },
       grid: {
         top: 40,
-        bottom: 70,
-        left: 0,
-        right: 0,
-        containerLabel: true,
+        bottom: 20,
+        left: 8,
+        right: 10,
       },
       xAxis: {
         type: 'category',
-        data: [
-          'Jul',
-          'Aug',
-          'Sep',
-          'Oct',
-          'Nov',
-          'Dec',
-          'Jan',
-          'Feb',
-          'Mar',
-          'Apr',
-          'May',
-          'Jun',
-          'Jul',
-          'Aug',
-          'Sep',
-        ],
+        data: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
         axisTick: {
           show: false,
         },
         axisLine: {
-          show: false,
+          show: true,
         },
         axisLabel: {
-          show: false,
+          show: true,
         },
         boundaryGap: 0,
       },
       yAxis: {
         type: 'value',
-        min: 10,
-        minInterval: 1,
+        min: Math.min(...minData) - 10,
+        max: Math.max(...maxData) + 10,
         axisLabel: {
-          show: false,
+          show: true,
         },
         splitLine: {
-          show: false,
+          show: true,
         },
       },
       series: [
         {
-          data,
+          name: 'Max Price',
+          data: maxData,
           type: 'line',
           smooth: true,
           showSymbol: false,
-          symbol: 'none',
           lineStyle: {
-            color: new echarts.graphic.LinearGradient(0, 0, 1, 0, [
-              { offset: 0, color: 'rgba(84, 112, 198, 0.1)' },
-              { offset: 1, color: 'rgba(84, 112, 198, 1)' },
-            ]),
+            color: 'rgba(84, 112, 198, 1)',
             width: 3,
-            type: 'solid',
-            cap: 'round',
           },
           areaStyle: {
-            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-              { offset: 0, color: 'rgba(84, 112, 198, 0.5)' },
-              { offset: 1, color: 'rgba(84, 112, 198, 0)' },
-            ]),
+            color: 'rgba(84, 112, 198, 0.5)',
+          },
+        },
+        {
+          name: 'Min Price',
+          data: minData,
+          type: 'line',
+          smooth: true,
+          showSymbol: false,
+          lineStyle: {
+            color: 'rgba(255, 99, 132, 1)',
+            width: 3,
+          },
+          areaStyle: {
+            color: 'rgba(255, 99, 132, 0.5)',
           },
         },
       ],
-    }),
-    [theme, data],
-  );
+    };
+  }, [data]);
 
   return <ReactEchart echarts={echarts} option={option} {...rest} />;
 };
