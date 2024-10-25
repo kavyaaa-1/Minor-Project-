@@ -1,3 +1,4 @@
+// TotalSpentChart.tsx
 import * as echarts from 'echarts/core';
 import ReactEchart from 'components/base/ReactEchart';
 import { BarChart } from 'echarts/charts';
@@ -10,35 +11,20 @@ echarts.use([BarChart, TooltipComponent, GridComponent, AxisPointerComponent, Ca
 
 interface TotalSpentChartProps {
   data: number[];
+  labels: string[]; // Add labels as a prop
   sx?: SxProps;
 }
 
-const TotalSpentChart = ({ data, ...rest }: TotalSpentChartProps) => {
+const TotalSpentChart = ({ data, labels, ...rest }: TotalSpentChartProps) => {
   const theme = useTheme();
+
   const option = useMemo(
     () => ({
       tooltip: {
         trigger: 'axis',
-        formatter: 'Spent: ${c}',
+        formatter: 'Modal Price: ₹{c}',
         axisPointer: {
-          type: 'line',
-          axis: 'y',
-          label: {
-            show: true,
-            formatter: (params: { value: number | string }) => {
-              return `$${params.value}`;
-            },
-            fontWeight: 500,
-            color: theme.palette.primary.main,
-            fontSize: theme.typography.caption.fontSize,
-            backgroundColor: theme.palette.info.light,
-            padding: [4, 4, 0, 4],
-          },
-          lineStyle: {
-            type: 'dashed',
-            color: theme.palette.primary.main,
-            width: 1,
-          },
+          show: false,
         },
       },
       grid: {
@@ -51,26 +37,9 @@ const TotalSpentChart = ({ data, ...rest }: TotalSpentChartProps) => {
       xAxis: [
         {
           type: 'category',
-          data: [
-            'Jan',
-            'Feb',
-            'Mar',
-            'Apr',
-            'May',
-            'Jun',
-            'Jul',
-            'Aug',
-            'Sep',
-            'Oct',
-            'Nov',
-            'Dec',
-          ],
-          axisTick: {
-            show: false,
-          },
-          axisLine: {
-            show: false,
-          },
+          data: labels, // Use labels from props
+          axisTick: { show: false },
+          axisLine: { show: false },
           axisLabel: {
             margin: 15,
             fontWeight: 500,
@@ -85,12 +54,8 @@ const TotalSpentChart = ({ data, ...rest }: TotalSpentChartProps) => {
           type: 'value',
           min: 100,
           minInterval: 1,
-          axisLabel: {
-            show: false,
-          },
-          splitLine: {
-            show: false,
-          },
+          axisLabel: { show: false },
+          splitLine: { show: false },
         },
       ],
       series: [
@@ -111,7 +76,7 @@ const TotalSpentChart = ({ data, ...rest }: TotalSpentChartProps) => {
         },
       ],
     }),
-    [theme, data],
+    [theme, data, labels]
   );
 
   return <ReactEchart echarts={echarts} option={option} {...rest} />;
