@@ -1,4 +1,4 @@
-// TotalSpentChart.tsx
+// PriceForecastChart.tsx
 import * as echarts from 'echarts/core';
 import ReactEchart from 'components/base/ReactEchart';
 import { BarChart } from 'echarts/charts';
@@ -9,13 +9,13 @@ import { useMemo } from 'react';
 
 echarts.use([BarChart, TooltipComponent, GridComponent, AxisPointerComponent, CanvasRenderer]);
 
-interface TotalSpentChartProps {
+interface PriceForecastChartProps {
   data: number[];
   labels: string[]; // Add labels as a prop
   sx?: SxProps;
 }
 
-const TotalSpentChart = ({ data, labels, ...rest }: TotalSpentChartProps) => {
+const PriceForecastChart = ({ data, labels, ...rest }: PriceForecastChartProps) => {
   const theme = useTheme();
 
   const option = useMemo(
@@ -82,4 +82,4 @@ const TotalSpentChart = ({ data, labels, ...rest }: TotalSpentChartProps) => {
   return <ReactEchart echarts={echarts} option={option} {...rest} />;
 };
 
-export default TotalSpentChart;
+export default PriceForecastChart;

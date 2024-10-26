@@ -1,10 +1,10 @@
-// TotalSpent.tsx
+// PriceForecast.tsx
 import { useState, useEffect } from 'react';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
-import TotalSpentChart from './TotalSpentChart';
+import PriceForecastChart from './PriceForecastChart.tsx';
 import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
@@ -29,7 +29,7 @@ const rangeData = {
 
 type RangeOption = keyof typeof rangeData; // Define type for range keys
 
-const TotalSpent = () => {
+const PriceForecast = () => {
   const [selectedCrop, setSelectedCrop] = useState<string>('Turmeric');
   const [selectedDistrict, setSelectedDistrict] = useState<string>('Hingoli');
   const [selectedRange, setSelectedRange] = useState<RangeOption>('1 week'); // Initialize range selection
@@ -113,7 +113,7 @@ const TotalSpent = () => {
         </Box>
 
 
-        <TotalSpentChart
+        <PriceForecastChart
           data={rangeData[selectedRange].data.slice()} // Data updates based on selected range
           labels={rangeData[selectedRange].labels.slice()} // Labels for x-axis
           sx={{ height: '230px', width: '100%' }}
@@ -123,4 +123,4 @@ const TotalSpent = () => {
   );
 };
 
-export default TotalSpent;
+export default PriceForecast;
