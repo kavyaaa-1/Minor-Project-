@@ -1,7 +1,7 @@
 import Grid from '@mui/material/Grid';
 import TopCards from 'components/sections/dashboard/top-cards';
 import AvatarCard from 'components/sections/dashboard/avatar-card';
-import TotalSpent from 'components/sections/dashboard/total-spent';
+import RainfallData from 'components/sections/dashboard/map/map';
 import Balance from 'components/sections/dashboard/balance';
 import SpentThisMonth from 'components/sections/dashboard/spent-this-month';
 import Transactions from 'components/sections/dashboard/transactions';
@@ -26,7 +26,7 @@ const Dashbaord = () => {
       </Grid>
 
       <Grid item xs={12} md={8}>
-        <TotalSpent />
+        <RainfallData />
       </Grid>
 
       <Grid item xs={12} md={4}>
