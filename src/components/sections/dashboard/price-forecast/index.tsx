@@ -9,6 +9,7 @@ import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import Button from '@mui/material/Button';
+import axios from 'axios';
 
 // Options for crops and districts
 const cropOptions = ['Cumin', 'Turmeric', 'Chillies'];
@@ -28,19 +29,43 @@ const rangeData = {
 } as const;
 
 type RangeOption = keyof typeof rangeData; // Define type for range keys
+axios.defaults.withCredentials = true;
 
 const PriceForecast = () => {
   const [selectedCrop, setSelectedCrop] = useState<string>('Turmeric');
   const [selectedDistrict, setSelectedDistrict] = useState<string>('Hingoli');
+  const [predictions, setPredictions] = useState<number[]>([]);
   const [selectedRange, setSelectedRange] = useState<RangeOption>('1 week'); // Initialize range selection
 
   const fetchForecast = async (crop: string, district: string) => {
-    // Placeholder function to fetch forecast data
+    try {
+      const response = await axios.post(
+        'http://localhost:5000/predict',
+        {
+          commodity: crop,
+          district: district,
+          min_price: 10000, // Replace with actual min price
+          max_price: 20000, // Replace with actual max price
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          withCredentials: true
+        },
+      );
+      console.log('response', response.data);
+      setPredictions(response.data); // Set predictions from API response
+    } catch (error) {
+      console.error('Error fetching forecast:', error);
+    }
   };
 
   useEffect(() => {
-    fetchForecast(selectedCrop, selectedDistrict);
-  }, [selectedCrop, selectedDistrict]);
+    if (selectedRange === '1 week') {
+      fetchForecast(selectedCrop, selectedDistrict); // Fetch predictions for 1 week
+    }
+  }, [selectedCrop, selectedDistrict, selectedRange]);
 
   const handleCropChange = (event: SelectChangeEvent) => {
     setSelectedCrop(event.target.value);
@@ -52,10 +77,13 @@ const PriceForecast = () => {
 
   const handleRangeChange = (range: RangeOption) => {
     setSelectedRange(range);
+    if (range === '1 week') {
+      fetchForecast(selectedCrop, selectedDistrict);
+    }
   };
 
   return (
-    <Paper sx={{ height: 400, p: 2 }}>
+    <Paper sx={{ height: 400, p: 3 }}>
       <Stack direction="row" spacing={2.5} alignItems="center" justifyContent="space-between">
         <Box>
           <Typography variant="h3">Crop Price Forecast</Typography>
@@ -86,7 +114,7 @@ const PriceForecast = () => {
       </Stack>
 
       <Box display="flex" alignItems="center" mt={2}>
-      <Box display="flex" flexDirection="column" alignItems="center" mr={2}>
+        <Box display="flex" flexDirection="column" alignItems="center" mr={2}>
           {['1 week', '1 month', '6 months'].map((range) => (
             <Button
               key={range}
@@ -112,10 +140,13 @@ const PriceForecast = () => {
           ))}
         </Box>
 
-
         <PriceForecastChart
-          data={rangeData[selectedRange].data.slice()} // Data updates based on selected range
-          labels={rangeData[selectedRange].labels.slice()} // Labels for x-axis
+          data={selectedRange === '1 week' ? predictions : [...rangeData[selectedRange].data]} // Show predictions for '1 week', else original data
+          labels={
+            selectedRange === '1 week'
+              ? Array.from({ length: 7 }, (_, i) => `Day ${i + 1}`)
+              : [...rangeData[selectedRange].labels]
+          } // Adjust labels for '1 week'
           sx={{ height: '230px', width: '100%' }}
         />
       </Box>
