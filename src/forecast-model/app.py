@@ -19,9 +19,9 @@ commodity_encoder = np.array(['Black pepper', 'Chili Red', 'Corriander seed', 'C
 
 
 min_price_scaler_min = 0.0
-min_price_scaler_scale = 1.04177518e-06
+min_price_scaler_scale = 959900.0
 max_price_scaler_min = 0.0
-max_price_scaler_scale = 1.04166667e-06
+max_price_scaler_scale = 960000.0
 
 @app.route('/predict', methods=['OPTIONS', 'POST'])
 def predict():
@@ -69,6 +69,8 @@ def predict():
 
         min_price_scaled = (min_price - min_price_scaler_min) / min_price_scaler_scale
         max_price_scaled = (max_price - max_price_scaler_min) / max_price_scaler_scale
+        print("min price",min_price_scaled)
+        print("max price",max_price_scaled)
 
         input_data = np.array([[commodity_encoded, district_encoded, year, month, day, min_price_scaled, max_price_scaled]])
         input_data = input_data.reshape((1, 1, 7))
@@ -78,9 +80,14 @@ def predict():
             prediction = model.predict(input_data)
             predictions.append(prediction[0][0])
             current_date += timedelta(days=1)
+            print(current_date)
+            print(prediction)
             input_data[0, 0, 4] = current_date.day
             input_data[0, 0, 3] = current_date.month
             input_data[0, 0, 2] = current_date.year
+            input_data[0, 0, 5] = (prediction[0][0] - 2000)/min_price_scaler_scale
+            input_data[0, 0, 6] = (prediction[0][0] + 2000)/max_price_scaler_scale
+
 
         # Convert predictions to Python floats
         predictions = [float(prediction) for prediction in predictions]

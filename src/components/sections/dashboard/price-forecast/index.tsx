@@ -10,10 +10,28 @@ import Select, { SelectChangeEvent } from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import Button from '@mui/material/Button';
 import axios from 'axios';
+import { format, addDays } from 'date-fns';
 
 // Options for crops and districts
-const cropOptions = ['Cumin', 'Turmeric', 'Chillies'];
-const districtOptions = ['Agra', 'Hingoli', 'Amreli', 'Kollam', 'Ratlam'];
+const cropOptions = [
+  'Black pepper',
+  'Chili Red',
+  'Corriander seed',
+  'Cummin Seed(Jeera)',
+  'Turmeric',
+];
+const districtOptions = [
+  'Balasore',
+  'Balodabazar',
+  'Balotra',
+  'Balrampur',
+  'Banaskanth',
+  'Bangalore',
+  'Hingoli',
+  'Amreli',
+  'Kollam',
+  'Ratlam',
+];
 
 // Chart data for different time ranges
 const rangeData = {
@@ -44,14 +62,14 @@ const PriceForecast = () => {
         {
           commodity: crop,
           district: district,
-          min_price: 10000, // Replace with actual min price
-          max_price: 20000, // Replace with actual max price
+          min_price: 5000, // Replace with actual min price
+          max_price: 12000, // Replace with actual max price
         },
         {
           headers: {
             'Content-Type': 'application/json',
           },
-          withCredentials: true
+          withCredentials: true,
         },
       );
       console.log('response', response.data);
@@ -88,7 +106,7 @@ const PriceForecast = () => {
         <Box>
           <Typography variant="h3">Crop Price Forecast</Typography>
           <Typography variant="caption" color="text.disabled" fontWeight={600}>
-            Price Today: 3990
+            Price Today: 7220
           </Typography>
         </Box>
         {/* Crop Selection */}
@@ -141,13 +159,15 @@ const PriceForecast = () => {
         </Box>
 
         <PriceForecastChart
-          data={selectedRange === '1 week' ? predictions : [...rangeData[selectedRange].data]} // Show predictions for '1 week', else original data
+          data={selectedRange === '1 week' ? predictions : [...rangeData[selectedRange].data]}
           labels={
             selectedRange === '1 week'
-              ? Array.from({ length: 7 }, (_, i) => `Day ${i + 1}`)
+              ? Array.from({ length: 7 }, (_, i) =>
+                  format(addDays(new Date(), i + 1), 'dd-MM-yy'),
+                )
               : [...rangeData[selectedRange].labels]
-          } // Adjust labels for '1 week'
-          sx={{ height: '230px', width: '100%' }}
+          }
+          sx={{ height: '230px', width: '120%' }}
         />
       </Box>
     </Paper>
