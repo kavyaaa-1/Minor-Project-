@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { ComposableMap, Geographies, Geography } from 'react-simple-maps';
-import { scaleQuantize } from 'd3-scale';
+//import { scaleQuantize } from 'd3-scale';
 import * as d3 from 'd3';
 
 // Define interfaces for rainfall data and GeoJSON features
@@ -50,7 +50,7 @@ const IndiaRainfallMap: React.FC = () => {
         setRainfallData(parsedRainfallData as RainfallData[]); // Type assertion
 
         // Load GeoJSON data
-        const geoResponse = await fetch(`venus/src/data/custom.geo.json`);
+        const geoResponse = await fetch(`venus/src/data/india.geo.json`);
         const geoJsonData = await geoResponse.json();
         setGeoData(geoJsonData as GeoJSONData); // Type assertion
       } catch (error) {
@@ -67,9 +67,9 @@ const IndiaRainfallMap: React.FC = () => {
   });
 
   // Color scale for rainfall values
-  const colorScale = scaleQuantize<string>()
-    .domain([0, d3.max(filteredData, d => d.avgRainfall) || 0])
-    .range(['#f7fbff', '#6baed6', '#2171b5', '#08306b']);
+  // const colorScale = scaleQuantize<string>()
+  //   .domain([0, d3.max(filteredData, d => d.avgRainfall) || 0])
+  //   .range(['#f7fbff', '#6baed6', '#2171b5', '#08306b']);
 
   const handleMouseEnter = (stateName: string) => {
     const stateData = filteredData.find(d => d.state === stateName);
@@ -102,15 +102,16 @@ const IndiaRainfallMap: React.FC = () => {
       </select>
 
       {geoData && (
-        <ComposableMap projectionConfig={{ scale: 1000 }}>
+        <ComposableMap projectionConfig={{ scale: 1200, center: [78, 22] }}>
           <Geographies geography={geoData}>
             {({ geographies }) =>
               geographies.map(geo => {
                 const stateName = geo.properties.NAME_1; // Adjust this according to your GeoJSON
-                const stateData = filteredData.find(d => d.state === stateName);
-                const fillColor = stateData ? colorScale(stateData.avgRainfall) : '#EEE';
+                //const stateData = filteredData.find(d => d.state === stateName);
+                const fillColor = '#EEE';
 
                 return (
+
                   <Geography
                     key={geo.rsmKey}
                     geography={geo}
@@ -118,11 +119,12 @@ const IndiaRainfallMap: React.FC = () => {
                     onMouseEnter={() => handleMouseEnter(stateName)}
                     onMouseLeave={handleMouseLeave}
                     style={{
-                      default: { outline: 'none' },
-                      hover: { fill: '#FFD700', outline: 'none' },
-                      pressed: { outline: 'none' },
+                      default: { stroke: 'black', strokeWidth: 0.5 }, // Outline color and width
+                      hover: { fill: '#FFD700', stroke: 'black', strokeWidth: 0.5 }, // Outline on hover
+                      pressed: { stroke: 'black', strokeWidth: 0.5 }, // Outline when pressed
                     }}
                   />
+
                 );
               })
             }
