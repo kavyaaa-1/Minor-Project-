@@ -40,7 +40,7 @@ const PriceForecast = () => {
   const fetchForecast = async (crop: string, district: string) => {
     try {
       const response = await axios.post(
-        'http://localhost:5000/predict',
+        'http://127.0.0.1:5000/predict',
         {
           commodity: crop,
           district: district,

@@ -12,7 +12,11 @@ CORS(app, supports_credentials=True, resources={r"/*": {"origins": "http://local
 
 model = load_model('rnn_price_forecast2.h5')
 district_encoder = np.load('district_classes.npy', allow_pickle=True)
-commodity_encoder = np.load('commodity_classes.npy', allow_pickle=True)
+# commodity_encoder = np.load('commodity_classes.npy', allow_pickle=True)
+commodity_encoder = np.array(['Black pepper', 'Chili Red', 'Corriander seed', 'Cummin Seed(Jeera)', 'Turmeric'])
+# print("district encoder content : ", district_encoder)
+
+
 
 min_price_scaler_min = 0.0
 min_price_scaler_scale = 1.04177518e-06
@@ -45,8 +49,23 @@ def predict():
         month = current_date.month
         day = current_date.day
 
-        district_encoded = district_encoder[district]
-        commodity_encoded = commodity_encoder[commodity]
+        # Convert district_encoder and commodity_encoder to lists
+        district_encoder_list = district_encoder.tolist()
+        commodity_encoder_list = commodity_encoder.tolist()
+        print(district_encoder_list)
+        print(commodity_encoder_list)
+        district_encoded = 0
+        commodity_encoded = 0
+
+        # Check if the district and commodity exist in the encoders
+        if district in district_encoder_list and commodity in commodity_encoder_list:
+            district_encoded = district_encoder_list.index(district)
+            commodity_encoded = commodity_encoder_list.index(commodity)
+        else:
+            print("Error: District or Commodity not found in encoder arrays.")
+            return jsonify({"error": "Invalid district or commodity name provided"}), 400
+
+
 
         min_price_scaled = (min_price - min_price_scaler_min) / min_price_scaler_scale
         max_price_scaled = (max_price - max_price_scaler_min) / max_price_scaler_scale
@@ -63,8 +82,12 @@ def predict():
             input_data[0, 0, 3] = current_date.month
             input_data[0, 0, 2] = current_date.year
 
+        # Convert predictions to Python floats
+        predictions = [float(prediction) for prediction in predictions]
         response = make_response(jsonify(predictions))
-        response.headers.add('Access-Control-Allow-Origin', '*')  # Add this header to the POST response
+
+        response.headers.add('Access-Control-Allow-Origin', 'http://localhost:3000')  # Specific origin
+        response.headers.add('Access-Control-Allow-Credentials', 'true')
         return response
     except Exception as e:
         logging.error("Error from flask app: %s", e)
