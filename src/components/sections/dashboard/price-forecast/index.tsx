@@ -33,18 +33,18 @@ const districtOptions = [
   'Ratlam',
 ];
 
-// // Chart data for different time ranges
-// const rangeData = {
-//   '1 week': {
-//     data: [160, 320, 210, 270, 180, 350, 230],
-//     labels: ['Day 1', 'Day 2', 'Day 3', 'Day 4', 'Day 5', 'Day 6', 'Day 7'],
-//   },
-//   '1 month': { data: [780, 920, 650, 880], labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'] },
-//   '6 months': {
-//     data: [2000, 2500, 1800, 2200, 2400, 2100],
-//     labels: ['Month 1', 'Month 2', 'Month 3', 'Month 4', 'Month 5', 'Month 6'],
-//   },
-// } as const;
+// Chart data for different time ranges
+const rangeData = {
+  '1 week': {
+    data: [160, 320, 210, 270, 180, 350, 230],
+    labels: ['Day 1', 'Day 2', 'Day 3', 'Day 4', 'Day 5', 'Day 6', 'Day 7'],
+  },
+  '1 month': { data: [780, 920, 650, 880], labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'] },
+  '6 months': {
+    data: [2000, 2500, 1800, 2200, 2400, 2100],
+    labels: ['Month 1', 'Month 2', 'Month 3', 'Month 4', 'Month 5', 'Month 6'],
+  },
+} as const;
 
 type RangeOption = keyof typeof rangeData; // Define type for range keys
 axios.defaults.withCredentials = true;
@@ -85,13 +85,13 @@ const PriceForecast = () => {
     }
   }, [selectedCrop, selectedDistrict, selectedRange]);
 
-//   const handleCropChange = (event: SelectChangeEvent) => {
-//     setSelectedCrop(event.target.value);
-//   };
+  const handleCropChange = (event: SelectChangeEvent) => {
+    setSelectedCrop(event.target.value);
+  };
 
-//   const handleDistrictChange = (event: SelectChangeEvent) => {
-//     setSelectedDistrict(event.target.value);
-//   };
+  const handleDistrictChange = (event: SelectChangeEvent) => {
+    setSelectedDistrict(event.target.value);
+  };
 
   const handleRangeChange = (range: RangeOption) => {
     setSelectedRange(range);
