@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { ComposableMap, Geographies, Geography } from 'react-simple-maps';
 import * as d3 from 'd3';
+import { theme } from 'theme/theme';
+import { Paper } from '@mui/material';
 
 interface RainfallData {
   state: string;
@@ -71,7 +73,9 @@ const IndiaRainfallMap: React.FC = () => {
   };
 
   return (
-    <div style={{ height: '100vh', position: 'relative' }}>
+    <Paper sx={{ height: 690, p: 3 }}>
+
+    <div style={{ height: '90vh', position: 'relative' }}>
       <h2>Average Rainfall Map</h2>
 
       <label htmlFor="year">Select Year: </label>
@@ -103,7 +107,7 @@ const IndiaRainfallMap: React.FC = () => {
                     onClick={(event) => handleStateClick(event, stateName)}
                     style={{
                       default: { stroke: 'black', strokeWidth: 0.5 },
-                      hover: { fill: '#FFD700', stroke: 'black', strokeWidth: 0.5 },
+                      hover: { fill: theme.palette.warning.main, stroke: 'black', strokeWidth: 0.5 },
                       pressed: { strokeWidth: 0 },
                     }}
                   />
@@ -133,6 +137,7 @@ const IndiaRainfallMap: React.FC = () => {
         </div>
       )}
     </div>
+    </Paper>
   );
 };
 

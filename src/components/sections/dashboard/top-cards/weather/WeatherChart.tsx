@@ -8,31 +8,31 @@ import { CanvasRenderer } from 'echarts/renderers';
 
 echarts.use([BarChart, TooltipComponent, GridComponent, AxisPointerComponent, CanvasRenderer]);
 
-interface SpentChartProps {
-  data: number[];
+interface WeatherChartProps {
+  data: number[]; // Weekly temperature data
   sx?: SxProps;
 }
 
-const SpentChart = ({ data, ...rest }: SpentChartProps) => {
+const WeatherChart = ({ data, ...rest }: WeatherChartProps) => {
   const theme = useTheme();
 
   const option = useMemo(
     () => ({
       tooltip: {
-        show: false,
+        trigger: 'item',
+        formatter: '{b}: {c}°C', // Display temperature with °C suffix
       },
       grid: {
-        top: '12%',
+        top: '7%',
         left: '5%',
         right: '5%',
-        bottom: '-12%',
+        bottom: '5%',
         containLabel: true,
       },
       xAxis: [
         {
           type: 'category',
-          data: ['', '', '', '', ''],
-          boundaryGap: false,
+          data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'], // Days of the week
           axisTick: {
             show: false,
           },
@@ -51,43 +51,39 @@ const SpentChart = ({ data, ...rest }: SpentChartProps) => {
       yAxis: [
         {
           type: 'value',
-          min: 10,
-          minInterval: 1,
+          min: Math.min(...data) - 5,
+          max: Math.max(...data) + 3,
           axisLabel: {
-            show: false,
+            show: true,
+            formatter: '{value}°C', 
           },
           splitLine: {
-            show: false,
+            show: true,
           },
         },
       ],
       series: [
         {
-          name: 'Spent',
+          name: 'Temperature',
           type: 'bar',
           barWidth: '35%',
-          showBackground: true,
-          backgroundStyle: {
-            color: theme.palette.info.dark,
-            borderRadius: [10, 10, 10, 10],
-          },
           data,
           itemStyle: {
-            color: theme.palette.primary.main,
+            color: theme.palette.warning.main,
             borderRadius: [10, 10, 10, 10],
           },
           emphasis: {
             itemStyle: {
-              color: theme.palette.primary.main,
+              color: theme.palette.warning.main,
             },
           },
         },
       ],
     }),
-    [theme, data],
+    [theme, data]
   );
 
   return <ReactEchart echarts={echarts} option={option} {...rest} />;
 };
 
-export default SpentChart;
+export default WeatherChart;

@@ -23,29 +23,12 @@ const languages: Language[] = [
   },
   {
     id: 2,
-    code: 'ban',
-    lang: 'বাংলা',
-    flag: 'twemoji:flag-bangladesh',
-  },
-  {
-    id: 3,
-    code: 'zh',
-    lang: '中文',
-    flag: 'twemoji:flag-china',
-  },
-  {
-    id: 4,
-    code: 'tr',
-    lang: 'Türkçe',
-    flag: 'twemoji:flag-turkey',
-  },
-  {
-    id: 5,
-    code: 'nld',
-    lang: 'Dutch',
-    flag: 'twemoji:flag-netherlands',
+    code: 'hi',
+    lang: 'हिन्दी',
+    flag: 'twemoji:flag-india',
   },
 ];
+
 
 const LanguageSelect = () => {
   const [language, setLanguage] = useState(languages[0]);

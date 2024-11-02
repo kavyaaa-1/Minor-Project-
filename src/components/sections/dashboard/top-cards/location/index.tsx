@@ -16,19 +16,20 @@ const Earnings = () => {
         <Stack
           alignItems="center"
           justifyContent="center"
-          height={56}
+          height={80}
           width={56}
           bgcolor="info.main"
           borderRadius="50%"
         >
-          <IconifyIcon icon="ic:round-bar-chart" color="primary.main" fontSize="h3.fontSize" />
+          <IconifyIcon icon="ic:round-location-on" color="primary.main" fontSize="h3.fontSize" />
+
         </Stack>
         <Box>
           <Typography variant="body2" color="text.disabled" fontWeight={500}>
-            Earnings
+            Your Location
           </Typography>
-          <Typography mt={1} variant="h3">
-            $350.40
+          <Typography mt={1} variant="h6" fontWeight={600}>
+          Rampur, Mirzapur, Uttar Pradesh
           </Typography>
         </Box>
       </Stack>

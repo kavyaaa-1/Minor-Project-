@@ -5,7 +5,6 @@ import {
   green,
   blue,
   skyblue,
-  purple,
   yellow,
   white,
   transparentRed,
@@ -50,10 +49,10 @@ declare module '@mui/material/styles' {
 
 const palette: PaletteOptions = {
   neutral: {
-    main: gray[500],
+    main: green[300],
   },
   primary: {
-    main: purple[500],
+    main: green[600],
   },
   secondary: {
     light: skyblue[500],
@@ -80,8 +79,8 @@ const palette: PaletteOptions = {
   },
   gradients: {
     primary: {
-      main: purple[500],
-      state: purple[300],
+      main: yellow[500],
+      state: green[600],
     },
   },
   transparent: {

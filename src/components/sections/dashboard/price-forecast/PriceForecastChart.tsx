@@ -70,7 +70,7 @@ const PriceForecastChart = ({ data, labels, ...rest }: PriceForecastChartProps) 
           },
           emphasis: {
             itemStyle: {
-              color: theme.palette.primary.main,
+              color: theme.palette.warning.main,
             },
           },
         },

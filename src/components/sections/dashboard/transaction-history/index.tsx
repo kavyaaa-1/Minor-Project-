@@ -22,7 +22,7 @@ const TransactionHistory = () => {
   };
 
   return (
-    <Paper sx={{ px: 0, height: { xs: 642, sm: 696 } }}>
+    <Paper sx={{ px: 0, height: { xs: 642, sm: 396 } }}>
       <Stack
         px={3.5}
         spacing={{ xs: 2, sm: 0 }}
@@ -51,7 +51,7 @@ const TransactionHistory = () => {
         </FormControl>
       </Stack>
 
-      <Box mt={1.5} height={{ xs: 400, sm: 600 }}>
+      <Box mt={1.5} height={{ xs: 400, sm: 300 }}>
         {/* Pass the selected crop to TransactionHistoryTable */}
         <TransactionHistoryTable selectedCrop={selectedCrop} />
       </Box>

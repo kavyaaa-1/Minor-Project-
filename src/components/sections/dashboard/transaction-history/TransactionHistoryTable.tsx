@@ -118,13 +118,13 @@ const TransactionHistoryTable: React.FC<TransactionHistoryTableProps> = ({ selec
   }, [selectedCrop]);
 
   return (
-    <div style={{ height: 600, width: '100%' }}>
+    <div style={{ height: 300, width: '100%' }}>
       <DataGrid
         columns={columns}
         rows={rows}
         paginationModel={paginationModel}
         onPaginationModelChange={setPaginationModel}
-        pageSizeOptions={[10, 25, 50]}
+        pageSizeOptions={[5, 25, 50]}
         checkboxSelection
       />
     </div>

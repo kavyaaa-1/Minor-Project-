@@ -6,9 +6,17 @@ export const red = {
   500: '#E31A1A',
 };
 
+// export const green = {
+//   500: '#05CD99',
+// };
+
 export const green = {
-  500: '#05CD99',
+  300: '#A5D6A7', // lighter shade
+  400: '#66BB6A', // medium shade
+  500: '#4CAF50', // main shade
+  600: '#43A047', // darker shade
 };
+
 
 export const blue = {
   300: '#707EAE',

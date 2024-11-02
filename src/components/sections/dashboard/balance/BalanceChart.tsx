@@ -10,6 +10,7 @@ import {
   LegendComponent,
 } from 'echarts/components';
 import { CanvasRenderer } from 'echarts/renderers';
+import { theme } from 'theme/theme';
 
 echarts.use([LineChart, TitleComponent, TooltipComponent, GridComponent, LegendComponent, CanvasRenderer]);
 
@@ -85,11 +86,11 @@ const BalanceChart = ({ data, ...rest }: BalanceChartProps) => {
           smooth: true,
           showSymbol: false,
           lineStyle: {
-            color: 'rgba(84, 112, 198, 1)',
+            color: theme.palette.warning.main,
             width: 3,
           },
           areaStyle: {
-            color: 'rgba(84, 112, 198, 0.5)',
+            color: theme.palette.warning.main,
           },
         },
         {
@@ -99,11 +100,11 @@ const BalanceChart = ({ data, ...rest }: BalanceChartProps) => {
           smooth: true,
           showSymbol: false,
           lineStyle: {
-            color: 'rgba(255, 99, 132, 1)',
+            color: theme.palette.primary.main,
             width: 3,
           },
           areaStyle: {
-            color: 'rgba(255, 99, 132, 0.5)',
+            color: theme.palette.primary.main,
           },
         },
       ],

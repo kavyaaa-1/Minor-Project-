@@ -25,7 +25,7 @@ interface RawTransaction {
 const cropOptions = ['Cumin', 'Turmeric', 'Chillies'];
 
 // Available years
-const yearOptions = [2010, 2011, 2012, 2013, 2014, 2015];
+const yearOptions = [2010, 2011, 2012, 2013, 2014];
 
 const convertExcelDateToJSDate = (excelSerialDate: number): string => {
   const date = new Date((excelSerialDate - 25569) * 86400 * 1000);

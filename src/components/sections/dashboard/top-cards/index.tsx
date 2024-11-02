@@ -1,20 +1,20 @@
 import Grid from '@mui/material/Grid';
-import Spent from './spent';
+import Weather from './weather';
 import Clients from './clients';
-import Earnings from './earnings';
+import Location from './location';
 import Activity from './activity';
 
 const TopCards = () => {
   return (
     <Grid container spacing={2.5}>
       <Grid item xs={12} sm={6} xl={3}>
-        <Spent />
+        <Location />
+      </Grid>
+      <Grid item xs={12} sm={6} xl={3}>
+        <Weather />
       </Grid>
       <Grid item xs={12} sm={6} xl={3}>
         <Clients />
-      </Grid>
-      <Grid item xs={12} sm={6} xl={3}>
-        <Earnings />
       </Grid>
       <Grid item xs={12} sm={6} xl={3}>
         <Activity />

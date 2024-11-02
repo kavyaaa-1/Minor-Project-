@@ -2,10 +2,10 @@ import Link from '@mui/material/Link';
 import Stack from '@mui/material/Stack';
 import Badge from '@mui/material/Badge';
 import Toolbar from '@mui/material/Toolbar';
-import TextField from '@mui/material/TextField';
+// import TextField from '@mui/material/TextField';
 import ButtonBase from '@mui/material/ButtonBase';
 import IconButton from '@mui/material/IconButton';
-import InputAdornment from '@mui/material/InputAdornment';
+// import InputAdornment from '@mui/material/InputAdornment';
 import IconifyIcon from 'components/base/IconifyIcon';
 import LanguageSelect from './LanguageSelect';
 import ProfileMenu from './ProfileMenu';
@@ -61,7 +61,7 @@ const Topbar = ({ isClosing, mobileOpen, setMobileOpen }: TopbarProps) => {
           </IconButton>
         </Toolbar>
 
-        <TextField
+        {/* <TextField
           variant="filled"
           placeholder="Search"
           sx={{ width: 340, display: { xs: 'none', md: 'flex' } }}
@@ -72,7 +72,7 @@ const Topbar = ({ isClosing, mobileOpen, setMobileOpen }: TopbarProps) => {
               </InputAdornment>
             ),
           }}
-        />
+        /> */}
       </Stack>
 
       <Stack spacing={{ xs: 1, sm: 2 }} alignItems="center">

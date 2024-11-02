@@ -9,7 +9,7 @@ import Typography from '@mui/material/Typography';
 import ButtonBase from '@mui/material/ButtonBase';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import IconifyIcon from 'components/base/IconifyIcon';
-import ProfileImage from 'assets/images/profile.png';
+import ProfileImage from 'assets/images/old-man.png';
 
 interface MenuItems {
   id: number;
@@ -28,26 +28,26 @@ const menuItems: MenuItems[] = [
     title: 'Account Settings',
     icon: 'ic:outline-manage-accounts',
   },
-  {
-    id: 3,
-    title: 'Notifications',
-    icon: 'ic:outline-notifications-none',
-  },
-  {
-    id: 4,
-    title: 'Switch Account',
-    icon: 'ic:outline-switch-account',
-  },
-  {
-    id: 5,
-    title: 'Help Center',
-    icon: 'ic:outline-contact-support',
-  },
-  {
-    id: 6,
-    title: 'Logout',
-    icon: 'ic:baseline-logout',
-  },
+  // {
+  //   id: 3,
+  //   title: 'Notifications',
+  //   icon: 'ic:outline-notifications-none',
+  // },
+  // {
+  //   id: 4,
+  //   title: 'Switch Account',
+  //   icon: 'ic:outline-switch-account',
+  // },
+  // {
+  //   id: 5,
+  //   title: 'Help Center',
+  //   icon: 'ic:outline-contact-support',
+  // },
+  // {
+  //   id: 6,
+  //   title: 'Logout',
+  //   icon: 'ic:baseline-logout',
+  // },
 ];
 
 const ProfileMenu = () => {
@@ -77,7 +77,7 @@ const ProfileMenu = () => {
           sx={{
             height: 44,
             width: 44,
-            bgcolor: 'primary.main',
+            bgcolor: 'info.dark',
           }}
         />
       </ButtonBase>
@@ -103,10 +103,10 @@ const ProfileMenu = () => {
             <Avatar src={ProfileImage} sx={{ mr: 1, height: 42, width: 42 }} />
             <Stack direction="column">
               <Typography variant="body2" color="text.primary" fontWeight={600}>
-                Alex Manda
+                Rajat Mandana
               </Typography>
               <Typography variant="caption" color="text.secondary" fontWeight={400}>
-                alex@example.com
+                998882349
               </Typography>
             </Stack>
           </MenuItem>

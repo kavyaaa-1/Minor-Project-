@@ -1,4 +1,4 @@
-import paths from 'routes/paths';
+// import paths from 'routes/paths';
 
 export interface SubMenuItem {
   name: string;
@@ -27,54 +27,54 @@ const sitemap: MenuItem[] = [
     icon: 'ri:dashboard-fill',
     active: true,
   },
-  {
-    id: 'activity',
-    subheader: 'Activity',
-    path: '#!',
-    icon: 'ic:baseline-show-chart',
-  },
+  // {
+  //   id: 'activity',
+  //   subheader: 'Activity',
+  //   path: '#!',
+  //   icon: 'ic:baseline-show-chart',
+  // },
   {
     id: 'library',
     subheader: 'Library',
     path: '#!',
     icon: 'material-symbols:local-library-outline',
   },
+  // {
+  //   id: 'authentication',
+  //   subheader: 'Authentication',
+  //   icon: 'ic:round-security',
+  //   active: true,
+  //   items: [
+  //     {
+  //       name: 'Sign In',
+  //       pathName: 'signin',
+  //       path: paths.signin,
+  //     },
+  //     {
+  //       name: 'Sign Up',
+  //       pathName: 'signup',
+  //       path: paths.signup,
+  //     },
+  //   ],
+  // },
   {
-    id: 'authentication',
-    subheader: 'Authentication',
-    icon: 'ic:round-security',
-    active: true,
-    items: [
-      {
-        name: 'Sign In',
-        pathName: 'signin',
-        path: paths.signin,
-      },
-      {
-        name: 'Sign Up',
-        pathName: 'signup',
-        path: paths.signup,
-      },
-    ],
-  },
-  {
-    id: 'schedules',
-    subheader: 'Schedules',
+    id: 'help-center',
+    subheader: 'Help Center',
     path: '#!',
-    icon: 'ic:outline-calendar-today',
+    icon: 'material-symbols:live-help-outline',
   },
-  {
-    id: 'payouts',
-    subheader: 'Payouts',
-    path: '#!',
-    icon: 'material-symbols:account-balance-wallet-outline',
-  },
-  {
-    id: 'settings',
-    subheader: 'Settings',
-    path: '#!',
-    icon: 'ic:outline-settings',
-  },
+  // {
+  //   id: 'payouts',
+  //   subheader: 'Payouts',
+  //   path: '#!',
+  //   icon: 'material-symbols:account-balance-wallet-outline',
+  // },
+  // {
+  //   id: 'settings',
+  //   subheader: 'Settings',
+  //   path: '#!',
+  //   icon: 'ic:outline-settings',
+  // },
 ];
 
 export default sitemap;
