@@ -18,10 +18,10 @@ const Earnings = () => {
           justifyContent="center"
           height={80}
           width={56}
-          bgcolor="info.main"
+          // bgcolor="info.main"
           borderRadius="50%"
         >
-          <IconifyIcon icon="ic:round-location-on" color="primary.main" fontSize="h3.fontSize" />
+          <IconifyIcon icon="ic:round-location-on" color="primary.main" fontSize="h2.fontSize" />
 
         </Stack>
         <Box>

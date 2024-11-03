@@ -1,6 +1,6 @@
 import Grid from '@mui/material/Grid';
 import Weather from './weather';
-import Clients from './clients';
+import Clients from './nearby-markets';
 import Location from './location';
 import Activity from './activity';
 
